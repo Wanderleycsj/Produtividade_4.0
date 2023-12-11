@@ -1,0 +1,60 @@
+PEGAR HORA
+
+
+let dataAtual = new Date();
+let hr = dataAtual.getMinutes();
+
+msg.payload.hora = hr;
+
+return msg;
+
+
+PRODUÇÃO
+
+let dataAtual = new Date();
+let hrnew = dataAtual.getMinutes();
+let numeroAleatorio = Math.floor(Math.random() * 10);
+
+msg.payload.hrnew = hrnew;
+
+if(msg.payload.hrnew == msg.payload.hr){
+    msg.payload.producao = msg.payload.producao + numeroAleatorio;
+} else{
+    msg.payload.producao = 0 
+    msg.payload.hr = msg.payload.hrnew
+}
+
+return msg;
+
+LED
+
+if(msg.payload.producao == 0){
+    msg.payload.led = 'r'
+    msg.payload.aux  = 'r'
+
+} else if(msg.payload.producao >= 1 && msg.payload.producao < 10){
+    
+    if(msg.payload.aux == 'r'){
+        msg.payload.led = ''
+    } else if(msg.payload.aux != 'r'){
+        msg.payload.led = 'r'
+    }
+    msg.payload.aux = 'r'
+
+}
+else if(msg.payload.producao >= 10 && msg.payload.producao < 25){
+    if(msg.payload.aux == 'y'){
+        msg.payload.led = ''
+    } else if(msg.payload.aux != 'y'){
+        msg.payload.led = 'y'
+    }
+    msg.payload.aux = 'y'
+}
+else if(msg.payload.producao >= 25){
+    if(msg.payload.aux == 'g'){
+        msg.payload.led = ''
+    } else if(msg.payload.aux != 'g'){
+        msg.payload.led = 'g'
+    }
+    msg.payload.aux = 'g'
+}
