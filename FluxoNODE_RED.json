@@ -1,0 +1,285 @@
+[
+    {
+        "id": "8f7a80ab578253ac",
+        "type": "tab",
+        "label": "Fluxo 6",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f569809344cc66dc",
+        "type": "function",
+        "z": "8f7a80ab578253ac",
+        "name": "Produção",
+        "func": "let dataAtual = new Date();\nlet hrnew = dataAtual.getMinutes();\nlet numeroAleatorio = Math.floor(Math.random() * 10);\n\nmsg.payload.hrnew = hrnew;\n\nif(msg.payload.hrnew == msg.payload.hr){\n    msg.payload.producao = msg.payload.producao + numeroAleatorio;\n} else{\n    msg.payload.producao = 0 \n    msg.payload.hr = msg.payload.hrnew\n}\n\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 280,
+        "wires": [
+            [
+                "fb13e89e36a41754"
+            ]
+        ]
+    },
+    {
+        "id": "8a97d3e0b254f9ba",
+        "type": "inject",
+        "z": "8f7a80ab578253ac",
+        "name": "",
+        "props": [
+            {
+                "p": "payload.producao",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "p": "payload.aux",
+                "v": "r",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 90,
+        "y": 280,
+        "wires": [
+            [
+                "6203cd6abe547af4"
+            ]
+        ]
+    },
+    {
+        "id": "04c43ec4b201d32c",
+        "type": "debug",
+        "z": "8f7a80ab578253ac",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "fb13e89e36a41754",
+        "type": "delay",
+        "z": "8f7a80ab578253ac",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 660,
+        "y": 280,
+        "wires": [
+            [
+                "8a6b95ca99778798",
+                "f3bab755b3ce0ba3"
+            ]
+        ]
+    },
+    {
+        "id": "8a6b95ca99778798",
+        "type": "change",
+        "z": "8f7a80ab578253ac",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.producao",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 970,
+        "y": 280,
+        "wires": [
+            [
+                "2c046625366df577"
+            ]
+        ]
+    },
+    {
+        "id": "6203cd6abe547af4",
+        "type": "function",
+        "z": "8f7a80ab578253ac",
+        "name": "Pegar Hora",
+        "func": "let dataAtual = new Date();\nlet hr = dataAtual.getMinutes();\n\nmsg.payload.hora = hr;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 250,
+        "y": 280,
+        "wires": [
+            [
+                "f569809344cc66dc"
+            ]
+        ]
+    },
+    {
+        "id": "f3bab755b3ce0ba3",
+        "type": "function",
+        "z": "8f7a80ab578253ac",
+        "name": "LED",
+        "func": "if(msg.payload.producao == 0){\n    msg.payload.led = 'r'\n    msg.payload.aux  = 'r'\n\n} else if(msg.payload.producao >= 1 && msg.payload.producao < 10){\n    \n    if(msg.payload.aux == 'r'){\n        msg.payload.led = ''\n    } else if(msg.payload.aux != 'r'){\n        msg.payload.led = 'r'\n    }\n    msg.payload.aux = 'r'\n\n}\nelse if(msg.payload.producao >= 10 && msg.payload.producao < 25){\n    if(msg.payload.aux == 'y'){\n        msg.payload.led = ''\n    } else if(msg.payload.aux != 'y'){\n        msg.payload.led = 'y'\n    }\n    msg.payload.aux = 'y'\n}\nelse if(msg.payload.producao >= 25){\n    if(msg.payload.aux == 'g'){\n        msg.payload.led = ''\n    } else if(msg.payload.aux != 'g'){\n        msg.payload.led = 'g'\n    }\n    msg.payload.aux = 'g'\n}\n\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 420,
+        "wires": [
+            [
+                "d01717126fda79f3",
+                "04c43ec4b201d32c",
+                "f569809344cc66dc"
+            ]
+        ]
+    },
+    {
+        "id": "0da8069b32a8b4ea",
+        "type": "comment",
+        "z": "8f7a80ab578253ac",
+        "name": "",
+        "info": "byte byteRead;\n\nvoid setup() {\n  // put your setup code here, to run once:\n  pinMode(13, OUTPUT);\n  pinMode(12, OUTPUT);\n  pinMode(11, OUTPUT);\n  Serial.begin(9600);\n \n}\n\nvoid loop() {\n  // put your main code here, to run repeatedly:\n  if (Serial.available())  \n  {\n    byteRead = Serial.read(); \n  }\n\n  if (byteRead =='r'){\n    digitalWrite(13, HIGH);\n    digitalWrite(12, LOW);\n    digitalWrite(11, LOW);\n  }\n  else if(byteRead =='y'){\n    digitalWrite(13, LOW);\n    digitalWrite(12, HIGH);\n    digitalWrite(11, LOW);\n  }\n  else if(byteRead =='g'){\n    digitalWrite(13, LOW);\n    digitalWrite(12, LOW);\n    digitalWrite(11, HIGH);\n  }\n\n}",
+        "x": 1120,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "2ed2729e537f0a41",
+        "type": "serial out",
+        "z": "8f7a80ab578253ac",
+        "name": "",
+        "serial": "27091d78212b6322",
+        "x": 890,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "d01717126fda79f3",
+        "type": "change",
+        "z": "8f7a80ab578253ac",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.led",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 670,
+        "y": 420,
+        "wires": [
+            [
+                "2ed2729e537f0a41"
+            ]
+        ]
+    },
+    {
+        "id": "2c046625366df577",
+        "type": "ui_gauge",
+        "z": "8f7a80ab578253ac",
+        "name": "",
+        "group": "0bb88b456171a238",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 1170,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "27091d78212b6322",
+        "type": "serial-port",
+        "serialport": "/dev/ttyUSB0",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "0bb88b456171a238",
+        "type": "ui_group",
+        "name": "Produtividade",
+        "tab": "6bf6c02b573a1c64",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6bf6c02b573a1c64",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
