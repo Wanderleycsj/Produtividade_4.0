@@ -121,4 +121,4 @@ void loop() {
 }
 ~~~
 ### Fluxo Node-Red
-<https://github.com/Wanderleycsj/Produtividade_4.0/blob/main/Imagens/Fluxo.PNG>
+![Fluxo](https://github.com/Wanderleycsj/Produtividade_4.0/blob/main/Imagens/Fluxo.PNG)
