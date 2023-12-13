@@ -17,7 +17,7 @@ No ambiente empresarial movimentado de hoje, onde a eficiência é fundamental, 
 
 ### Funcionamento 
 
-A ideia do projeo é o RaspBerry receber o valor da produtividade daquele estante, analisar se o valor está dentro ou não da meta de produtividade e por fim indicar para arduino atraves da portal serial qual Led deve estar acesso. E por sua vez o arduino deve acender o Led indicado pelo RaspBerry. Para programar o Raspberry Foi utilizado o Node-Red. Como o sistema não foi implementado na pratica dentro do proprio sistema foi criado um codigo com o intuido de simular uma produção. Ou seja a cada XXXXXX ele adiciona um numero aleatorio na produção e esse valor zera quando a unidade de tempo utilizada muda. Para testes foi utilizado o minuto para facilitar a analise.
+A ideia do projeto é o RaspBerry receber o valor da produtividade daquele estante, analisar se o valor está dentro ou não da meta de produtividade e por fim indicar para Arduíno através da portal serial qual Led deve estar acesso. E por sua vez o Arduíno deve acender o Led indicado pelo RaspBerry. Para programar o Raspberry Foi utilizado o Node-Red. Como o sistema não foi implementado na pratica dentro do próprio sistema foi criado um código com o intuito de simular uma produção. Ou seja a cada tempo determinado ele adiciona um numero aleatório na produção e esse valor zera quando a unidade de tempo utilizada muda. Para testes foi utilizado o minuto para facilitar a analise.
 
 #### Código para obter o minuto atual 
 ~~~javascript
@@ -27,8 +27,10 @@ let hr = dataAtual.getMinutes();
 msg.payload.hora = hr;
 
 return msg;
+~~~
 
-
+#### Código para gerar o valor da produção
+~~~javascript
 PRODUÇÃO
 
 let dataAtual = new Date();
@@ -44,3 +46,41 @@ if(msg.payload.hrnew == msg.payload.hr){
     msg.payload.hr = msg.payload.hrnew
 }
 ~~~
+
+Em relação ao código de calculo da produção foi colocado em Loop para sempre incrementar o valor final. E por fim esse valor da produção pasa por um ultimo código onde separa cada faixa para cada cor de Led. Ele identifica em qual faixa o valor está e manda essa informação para o Arduíno através da comunicação serial.
+
+#### Código para determinar qual Led ira acender
+~~~javascript
+if(msg.payload.producao == 0){
+    msg.payload.led = 'r'
+    msg.payload.aux  = 'r'
+
+} else if(msg.payload.producao >= 1 && msg.payload.producao < 10){
+    
+    if(msg.payload.aux == 'r'){
+        msg.payload.led = ''
+    } else if(msg.payload.aux != 'r'){
+        msg.payload.led = 'r'
+    }
+    msg.payload.aux = 'r'
+
+}
+else if(msg.payload.producao >= 10 && msg.payload.producao < 25){
+    if(msg.payload.aux == 'y'){
+        msg.payload.led = ''
+    } else if(msg.payload.aux != 'y'){
+        msg.payload.led = 'y'
+    }
+    msg.payload.aux = 'y'
+}
+else if(msg.payload.producao >= 25){
+    if(msg.payload.aux == 'g'){
+        msg.payload.led = ''
+    } else if(msg.payload.aux != 'g'){
+        msg.payload.led = 'g'
+    }
+    msg.payload.aux = 'g'
+}
+~~~
+
+Ja no arduino ele recebe qual led 
