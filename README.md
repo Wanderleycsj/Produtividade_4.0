@@ -13,8 +13,8 @@ No ambiente empresarial movimentado de hoje, onde a eficiência é fundamental, 
 * Fonte(ALimentação RaspBerry)
 * Cabo USB 2.0 - A/B (Comunicação Serial Arduino - RaspBerry)
 
-###
-
+### Montagem Arduino
+<https://github.com/Wanderleycsj/Produtividade_4.0/blob/main/Imagens/Esquema%20Arduino.PNG>
 ### Funcionamento 
 
 A ideia do projeto é o RaspBerry receber o valor da produtividade daquele estante, analisar se o valor está dentro ou não da meta de produtividade e por fim indicar para Arduíno através da portal serial qual Led deve estar acesso. E por sua vez o Arduíno deve acender o Led indicado pelo RaspBerry. Para programar o Raspberry Foi utilizado o Node-Red. Como o sistema não foi implementado na pratica dentro do próprio sistema foi criado um código com o intuito de simular uma produção. Ou seja a cada tempo determinado ele adiciona um numero aleatório na produção e esse valor zera quando a unidade de tempo utilizada muda. Para testes foi utilizado o minuto para facilitar a analise.
@@ -31,8 +31,6 @@ return msg;
 
 #### Código para gerar o valor da produção
 ~~~javascript
-PRODUÇÃO
-
 let dataAtual = new Date();
 let hrnew = dataAtual.getMinutes();
 let numeroAleatorio = Math.floor(Math.random() * 10);
@@ -122,3 +120,5 @@ void loop() {
 
 }
 ~~~
+### Fluxo Node-Red
+<https://github.com/Wanderleycsj/Produtividade_4.0/blob/main/Imagens/Fluxo.PNG>
